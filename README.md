@@ -9,7 +9,7 @@ Vault audit logs are not enabled by default. Audit devices must be enabled by a 
 
 It is **highly recommended** that you configure Vault to use multiple audit devices. Audit failures can prevent Vault from servicing requests, so it is important to enable at least two audit devices to prevent [blocking failures](https://developer.hashicorp.com/vault/docs/audit#blocked-audit-devices).
 
-### Diagram
+### Demo Diagram
 <img src="./img/vault-audit.png">
 
 ### Usage
