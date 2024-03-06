@@ -1,0 +1,20 @@
+setup.template:
+  name: "vault-audit"
+  pattern: "vault-audit-%{+yyyy.MM.dd}"
+
+filebeat.inputs:
+  - type: tcp
+    host: "0.0.0.0:9090"
+
+processors:
+  - decode_json_fields:
+      fields: ["message"]
+      target: ""
+      overwrite_keys: true
+      add_error_key: true
+  - drop_fields:
+      fields: ["message", "@timestamp"]
+
+output.elasticsearch:
+  index: "vault-audit-%{+yyyy.MM.dd}"
+  hosts: ["http://elasticsearch:9200"]

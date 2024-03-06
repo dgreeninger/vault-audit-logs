@@ -1,0 +1,80 @@
+version: '3'
+
+services:
+  elasticsearch:
+    container_name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    volumes:
+      - elasticsearch:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    environment:
+      - node.name=elasticsearch
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    healthcheck:
+      test: curl -fs http://localhost:9200 || exit 1
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+  kibana:
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:${ELASTIC_VERSION}
+    ports:
+      - 5601:5601
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+
+  filebeat:
+    container_name: filebeat
+    image: docker.elastic.co/beats/filebeat:${ELASTIC_VERSION}
+    command: filebeat --strict.perms=false -e -d "*"
+    configs:
+      - source: filebeat
+        target: /usr/share/filebeat/filebeat.yml
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+
+  vault:
+    container_name: vault
+    image: hashicorp/vault:${VAULT_VERSION}
+    command: server
+    environment:
+      VAULT_LOCAL_CONFIG: |
+        {
+          "ui": true,
+          "listener": [{
+            "tcp": {
+              "address": "0.0.0.0:8200",
+              "tls_disable": true
+            }
+          }],
+          "storage": {
+            "file": {
+              "path": "/vault/file"
+            }
+          }
+        }
+    volumes:
+      - vault:/vault/file
+    cap_add:
+      - IPC_LOCK
+    ports:
+      - 8200:8200
+    depends_on:
+      - filebeat
+
+configs:
+  filebeat:
+    file: ./configs/filebeat.yml
+
+volumes:
+  elasticsearch:
+    driver: local
+  vault:
+    driver: local
