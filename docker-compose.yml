@@ -32,7 +32,7 @@ services:
   filebeat:
     container_name: filebeat
     image: docker.elastic.co/beats/filebeat:${ELASTIC_VERSION}
-    command: filebeat --strict.perms=false -e -d "*"
+    command: --strict.perms=false
     configs:
       - source: filebeat
         target: /usr/share/filebeat/filebeat.yml
