@@ -2,6 +2,8 @@
 
 set -e
 
+cd "$(dirname "$0")"
+
 echo "generating audit events..."
 
 export VAULT_ADDR=http://localhost:8200
