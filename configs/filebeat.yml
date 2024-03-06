@@ -1,6 +1,6 @@
 setup.template:
   name: "vault-audit"
-  pattern: "vault-audit-%{+yyyy.MM.dd}"
+  pattern: "vault-audit"
 
 filebeat.inputs:
   - type: tcp
@@ -16,5 +16,5 @@ processors:
       fields: ["message", "@timestamp"]
 
 output.elasticsearch:
-  index: "vault-audit-%{+yyyy.MM.dd}"
+  index: "vault-audit"
   hosts: ["http://elasticsearch:9200"]
