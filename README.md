@@ -1,6 +1,6 @@
 # Vault Audit
 
-***NOTE: This repository is for demo purposes only***
+> ***NOTE: This repository is for demo purposes only***
 
 ### Overview
 Vault audit logs contain the full request/response objects for every interaction with Vault. Audit logs are critically important as they explain **who did what, and when**.
