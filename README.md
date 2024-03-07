@@ -20,6 +20,9 @@ $ docker compose up -d
 # configure vault
 $ ./scripts/setup.sh
 
+# generate sample events
+$ ./scripts/events.sh
+
 # vault:         http://localhost:8200
 # kibana:        http://localhost:5601
 # elasticsearch: http://localhost:9200
