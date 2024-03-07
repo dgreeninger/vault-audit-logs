@@ -43,35 +43,24 @@ services:
   vault:
     container_name: vault
     image: hashicorp/vault:${VAULT_VERSION}
-    command: server
-    environment:
-      VAULT_LOCAL_CONFIG: |
-        {
-          "ui": true,
-          "listener": [{
-            "tcp": {
-              "address": "0.0.0.0:8200",
-              "tls_disable": true
-            }
-          }],
-          "storage": {
-            "file": {
-              "path": "/vault/file"
-            }
-          }
-        }
-    volumes:
-      - vault:/vault/file
+    command: server -config=/vault/vault.hcl
     cap_add:
       - IPC_LOCK
     ports:
       - 8200:8200
+    volumes:
+      - vault:/vault/file
+    configs:
+      - source: vault
+        target: /vault/vault.hcl
     depends_on:
       - filebeat
 
 configs:
   filebeat:
     file: ./configs/filebeat.yml
+  vault:
+    file: ./configs/vault.hcl
 
 volumes:
   elasticsearch:
