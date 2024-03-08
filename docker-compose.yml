@@ -12,6 +12,8 @@ services:
       - node.name=elasticsearch
       - discovery.type=single-node
       - xpack.security.enabled=false
+      - logger.level=WARN
+      - ES_JAVA_OPTS=-Xms1024m -Xmx1024m
     healthcheck:
       test: curl -fs http://localhost:9200 || exit 1
       interval: 10s
