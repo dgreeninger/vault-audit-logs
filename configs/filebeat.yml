@@ -13,7 +13,7 @@ processors:
       overwrite_keys: true
       add_error_key: true
   - drop_fields:
-      fields: ["message", "@timestamp"]
+      fields: ["message"]
 
 output.elasticsearch:
   index: "vault-audit"
