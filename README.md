@@ -39,12 +39,6 @@ Follow [these steps](https://www.elastic.co/guide/en/kibana/8.12/data-views.html
 6. Click **Save Data view to Kibana**.
 
 
-### Auth Tuning
-
-```
-vault auth tune -audit-non-hmac-request-keys=username userpass/
-```
-
 ### Full Observability
 Observability is the ability to measure the internal states of a system by examining its outputs. In the context of HashiCorp Vault, the key outputs to examine are log files, telemetry metrics, and data scraped from API endpoints.
 
