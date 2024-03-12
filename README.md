@@ -1,4 +1,4 @@
-# Vault Audit
+# Vault Audit Logs
 
 ***NOTE: This repository is for demo purposes only***
 
