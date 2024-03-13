@@ -26,6 +26,9 @@ $ ./scripts/events.sh
 # vault:         http://localhost:8200
 # kibana:        http://localhost:5601
 # elasticsearch: http://localhost:9200
+
+# cleanup
+$ docker compose down
 ```
 
 ### Kibana
