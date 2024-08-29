@@ -7,28 +7,49 @@ cd "$(dirname "$0")"
 echo "generating audit events..."
 
 export VAULT_ADDR=http://localhost:8200
-export VAULT_TOKEN=$(jq -r .root_token init.json)
 
-vault auth enable userpass > /dev/null || true
-vault auth enable approle > /dev/null || true
-vault secrets enable -version=2 kv > /dev/null || true
-vault secrets enable database > /dev/null || true
+names=(
+    "alice" "bob" "charlie" "david" "emma" "frank" "grace" "hannah" "ivy" "jack"
+    "katie" "liam" "mia" "nathan" "olivia" "paul" "quinn" "rachel" "sam" "tina"
+    "ursula" "victor" "wendy" "xander" "yara" "zach"
+)
 
-for i in {1..20}; do
-  vault write auth/userpass/users/$i password=$i > /dev/null
-  vault write -f auth/approle/role/$i > /dev/null
+for name in "${names[@]}"; do
+  export VAULT_TOKEN=$(vault login -token-only -method=userpass username=$name password=$name)
+  
+  vault kv put kv/users/$name/demo db_user=$RANDOM db_password=$(uuidgen) > /dev/null
+  vault kv put kv/users/$name/example api_key=$(uuidgen) > /dev/null
+
+  vault kv list kv/users/$name > /dev/null
+
+  # Loop random number of times
+  for ((i = 1; i <= $((RANDOM % 10 + 1)); i++)); do
+    vault kv get kv/users/$name/demo > /dev/null
+  done
+
 done
 
-for i in {1..20}; do
-  unset VAULT_TOKEN
-  vault login -method=userpass username=$i password=$i > /dev/null 2>&1
+for name in "${names[@]}"; do
+  export VAULT_TOKEN=$(jq -r .root_token init.json)
 
-  r=$(vault read -field=role_id auth/approle/role/$i/role-id)
-  s=$(vault write -f -field=secret_id auth/approle/role/$i/secret-id)
-  vault write auth/approle/login role_id=$r secret_id=$s > /dev/null
+  r=$(vault read -field=role_id auth/approle/role/svc-${name:0:1}/role-id)
+  s=$(vault write -f -field=secret_id auth/approle/role/svc-${name:0:1}/secret-id)
+  
+  export VAULT_TOKEN=$(vault write -field=token auth/approle/login role_id=$r secret_id=$s)
 
-  vault kv put kv/$i/db db_user=$RANDOM db_password=$RANDOM > /dev/null
-  vault kv list kv/$i > /dev/null
-  vault kv get kv/$i/db > /dev/null
-  vault kv metadata delete kv/$i/db > /dev/null
+  vault kv put kv/svc/svc-${name:0:1}/db db_user=$RANDOM db_password=$RANDOM > /dev/null
+
+  if [ $((RANDOM % 100 + 1)) -le 25 ]; then
+    # 25% chance
+    vault kv put kv/svc/svc-${name:0:1}/api api_key=$(uuidgen) > /dev/null
+
+    for ((i = 1; i <= $((RANDOM % 10 + 1)); i++)); do
+      vault kv get kv/svc/svc-${name:0:1}/api > /dev/null
+    done
+  fi
+
+  # Loop random number of times
+  for ((i = 1; i <= $((RANDOM % 10 + 1)); i++)); do
+    vault kv get kv/svc/svc-${name:0:1}/db > /dev/null
+  done
 done

@@ -28,7 +28,7 @@ $ ./scripts/events.sh
 # elasticsearch: http://localhost:9200
 
 # cleanup
-$ docker compose down
+$ docker compose down -v
 ```
 
 ### Kibana
