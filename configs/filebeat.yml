@@ -9,11 +9,12 @@ filebeat.inputs:
 processors:
   - decode_json_fields:
       fields: ["message"]
-      target: ""
+      target: "message"
       overwrite_keys: true
       add_error_key: true
-  - drop_fields:
-      fields: ["message"]
+  - drop_event:
+      when:
+        has_fields: ["error.message"]
 
 output.elasticsearch:
   index: "vault-audit"
