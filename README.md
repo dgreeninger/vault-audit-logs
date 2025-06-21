@@ -66,9 +66,9 @@ Create a [standard HCP Vault cluster](https://portal.cloud.hashicorp.com/service
 ### HCP Vault Usage
 ```bash
 # Set HCP Vault environment variables
-$  export VAULT_ADDR="https://chef-vault-cluster-public-vault-c367d66c.40170e59.z1.hashicorp.cloud:8200"
-$  export VAULT_NAMESPACE="admin"
-$  export VAULT_TOKEN="admin"
+$  export VAULT_ADDR="https://example-vault-cluster.40170e59.z1.hashicorp.cloud:8200"
+$  export VAULT_NAMESPACE="admin" #default namespace for HCP Vault
+$  export VAULT_TOKEN="hvs.VaultTokenFromPortal"
 
 # configure vault
 $ ./scripts/setup-hcp.sh
