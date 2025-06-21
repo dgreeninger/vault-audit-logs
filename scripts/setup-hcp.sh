@@ -18,7 +18,7 @@ if [ -z "$VAULT_TOKEN" ]; then
     export VAULT_TOKEN=$VAULT_TOKEN
     export HCP_ADMIN_VAULT_TOKEN=$VAULT_TOKEN
 else
-    echo "Using existing VAULT_TOKEN that was set previously. If yout get access denied messages, run 'unset VAULT_TOKEN'"
+    echo "Using existing VAULT_TOKEN that was set previously. If you get access denied messages, run 'unset VAULT_TOKEN'"
 fi
 
 export VAULT_NAMESPACE=admin
